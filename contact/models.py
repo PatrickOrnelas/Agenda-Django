@@ -1,20 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
-"""
-Table Contacts:
-    id(primary key - AUTO),
-    first_name(string),
-    last_name(string - blank=True),
-    phone(string),
-    email(email, blank=True),
-    created_date(date),
-    description(text)
-
-DEPOIS:
-    owner(foreign key),
-
-"""
+from django.contrib.auth.models import User
 class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
@@ -45,6 +31,11 @@ class Contacts(models.Model):
         on_delete=models.SET_NULL,
         blank=True, null=True
         )
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
