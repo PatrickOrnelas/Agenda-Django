@@ -9,4 +9,5 @@ class ContactsAdmin(admin.ModelAdmin):
     search_fields = 'id', 'first_name', 'last_name',
     list_per_page = 25
     list_max_show_all = 100
-    # list_editable = 'first_name', 'last_name'
+    list_editable = 'first_name', 'last_name'
+    list_display_links = 'id', 'phone',
