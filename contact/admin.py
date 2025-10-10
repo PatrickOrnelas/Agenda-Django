@@ -10,6 +10,7 @@ class ContactsAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_max_show_all = 100
     list_display_links = 'id', 'first_name',
+    list_editable = 'show',
 
 @admin.register(models.Category)
 class Category(admin.ModelAdmin):
