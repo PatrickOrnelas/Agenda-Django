@@ -3,12 +3,15 @@
 {% block content %}
  <div class="form-wrapper">
     <h2>Contact</h2>
-    <form action="" method="POST", enctype="multipart/from-data">
+    <form action="{% url "contact:create" %}" method="POST", enctype="multipart/from-data">
+      {% csrf_token %}
         <div class="form-contect">
+          {% for field in form %}
             <div class="form-group">
-                <label for="id_first_name">LABEL</label>
-                <input type="text", name="first_name", maxlength="255", id="id_first_name">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
             </div>
+          {% endfor %}
         </div>
 
         <div class="form-content">

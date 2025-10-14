@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from contact.models import Contacts
 from django.core.paginator import Paginator
+from django import forms
+from contact.forms import ContactsForm
 # Create your views here.
 
 def index(request):
@@ -65,12 +67,25 @@ def search(request):
     )
 
 def create(request):
+
+    if request.method == 'POST':
+
+        context = {
+            'form': ContactsForm(request.POST)
+        }
+
+        return render(
+            request,
+            'contact/create.html',
+            context
+        )
+    
     context = {
-
-    }
-
+            'form': ContactsForm()
+        }
+    
     return render(
-        request,
-        'contact/create.html',
-        context
-    )
+            request,
+            'contact/create.html',
+            context
+        )
