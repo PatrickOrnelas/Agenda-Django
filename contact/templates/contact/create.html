@@ -9,15 +9,25 @@
           {% for field in form %}
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
+                {{ field }} 
+                {{ field.erros }}
             </div>
           {% endfor %}
         </div>
+        {% if form.non_field_erros %}
+          <div class="form-content">
+            <div class="form-group">
+              <div class="message error">
+                {{ form.non_field_erros }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
 
         <div class="form-content">
-        <div class="form-group">
-          <button class="btn" type="submit">Send</button>
-        </div>
+            <div class="form-group">
+            <button class="btn" type="submit">Send</button>
+          </div>
       </div>
         
     </form>
