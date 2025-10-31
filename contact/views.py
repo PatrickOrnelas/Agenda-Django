@@ -68,24 +68,30 @@ def search(request):
 
 def create(request):
 
+
     if request.method == 'POST':
+        form = ContactsForm(request.POST)
 
         context = {
-            'form': ContactsForm(request.POST)
+            'form': form
         }
+
+        if form.is_valid():
+            form.save()
+            return redirect('contact:create')
 
         return render(
             request,
             'contact/create.html',
             context
         )
-    
+
     context = {
-            'form': ContactsForm()
-        }
-    
+        'form': ContactsForm()
+    }
+
     return render(
-            request,
-            'contact/create.html',
-            context
-        )
+        request,
+        'contact/create.html',
+        context
+    )

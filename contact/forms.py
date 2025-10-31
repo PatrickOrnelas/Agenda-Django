@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
-from contact.models import Contacts
+from contact.models import Contacts, Category
 from django.core.paginator import Paginator
 from django import forms
 from django.core.exceptions import ValidationError
@@ -33,9 +33,38 @@ class ContactsForm(forms.ModelForm):
         label='Telefone',
     )
 
+    email = forms.EmailField(
+        widget = forms.EmailInput(
+            attrs={
+                'placeholder': 'Digite seu email'
+            }
+        ),
+        label='Email',
+        required=False,
+    )
+
+    description = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'placeholder': 'Digite uma descrição',
+                'rows': 5,
+                'cols': 20
+            }
+        ),
+        label='Descrição',
+        required=False,
+    )
+
+    category = forms.ModelChoiceField(
+        queryset = Category.objects.all(),
+        empty_label = 'Selecione a categoria',
+        label='Categoria',
+        required=False,
+    )
+
     class Meta:
         model = Contacts
-        fields = ('first_name', 'last_name', 'phone',)
+        fields = ('first_name', 'last_name', 'phone', 'email', 'description', 'category')
         widgets = {
             'first_name' : forms.TextInput(
                 attrs= {
@@ -57,6 +86,7 @@ class ContactsForm(forms.ModelForm):
         if first_name == last_name:
             self.add_error('first_name', msg)
             self.add_error('last_name', msg)
+
 
         return super().clean()
 
