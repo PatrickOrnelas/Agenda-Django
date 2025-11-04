@@ -4,6 +4,8 @@ from contact.models import Contacts
 from django.core.paginator import Paginator
 from django import forms
 from contact.forms import ContactsForm
+from django.urls import reverse
+
 # Create your views here.
 
 def index(request):
@@ -67,18 +69,19 @@ def search(request):
     )
 
 def create(request):
-
+    form_action = reverse('contact:create')
 
     if request.method == 'POST':
         form = ContactsForm(request.POST)
-
         context = {
-            'form': form
+            'form': form,
+            'form_action': form_action,
+
         }
 
         if form.is_valid():
-            form.save()
-            return redirect('contact:create')
+            contact = form.save()
+            return redirect('contact:update', contact_id=contact.id)
 
         return render(
             request,
@@ -87,7 +90,41 @@ def create(request):
         )
 
     context = {
-        'form': ContactsForm()
+        'form': ContactsForm(),
+        'form_action': form_action
+    }
+
+    return render(
+        request,
+        'contact/create.html',
+        context
+    )
+
+def update(request, contact_id):
+    contact = get_object_or_404(Contacts, pk=contact_id, show=True)
+    form_action = reverse('contact:update', args=(contact_id,))
+
+    if request.method == 'POST':
+        form = ContactsForm(request.POST, instance=contact)
+        context = {
+            'form': form,
+            'form_action': form_action,
+
+        }
+
+        if form.is_valid():
+            contact = form.save()
+            return redirect('contact:update', contact_id=contact.id)
+
+        return render(
+            request,
+            'contact/create.html',
+            context
+        )
+
+    context = {
+        'form': ContactsForm(instance=contact),
+        'form_action': form_action
     }
 
     return render(
