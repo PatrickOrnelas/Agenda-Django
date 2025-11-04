@@ -3,7 +3,7 @@ from django.db.models import Q
 from contact.models import Contacts
 from django.core.paginator import Paginator
 from django import forms
-from contact.forms import ContactsForm
+from contact.forms import ContactsForm, RegisterForm
 from django.urls import reverse
 
 # Create your views here.
@@ -145,3 +145,18 @@ def delete(request, contact_id):
         'contact': contact,
         'confirmation' : confirmation, 
     })
+
+def register(request):
+    form = RegisterForm()
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            
+    return render(request,
+                  'contact/register.html',
+                  {
+                      'form' : form,
+                  }
+                  )
