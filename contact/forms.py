@@ -4,8 +4,10 @@ from contact.models import Contacts, Category
 from django.core.paginator import Paginator
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
 
 class ContactsForm(forms.ModelForm):
+
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -62,16 +64,20 @@ class ContactsForm(forms.ModelForm):
         required=False,
     )
 
+    picture = forms.ImageField(
+        label='Foto',
+        required=False,
+        widget=forms.FileInput(
+            attrs = {
+                'accept' : 'image/*'
+            }
+        ),
+    )
+
     class Meta:
         model = Contacts
-        fields = ('first_name', 'last_name', 'phone', 'email', 'description', 'category')
-        widgets = {
-            'first_name' : forms.TextInput(
-                attrs= {
-                    'placeholder' : 'Teste'
-                }
-            )
-        }
+        fields = ('first_name', 'last_name', 'phone', 'email', 'description', 'category', 'picture')
+   
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -100,3 +106,6 @@ class ContactsForm(forms.ModelForm):
                 code='invalid')
             )
         return first_name
+    
+class RegisterForm(UserCreationForm):
+    pass

@@ -24,6 +24,11 @@ enctype="multipart/form-data"
               <p class="help-text">{{ field.help_text }}</p>
             {% endif %}
 </div>
+<div class="form-group">
+  {% if field.name == 'picture' and field.value.url %}
+      <img src="{{ field.value.url }}" alt="Foto de {{ form.first_name.value }} {{ form.last_name.value }}">
+  {% endif %}
+</div>
 {% endfor %}
 </div>
 
