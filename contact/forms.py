@@ -111,12 +111,15 @@ class ContactsForm(forms.ModelForm):
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(
         required=True,
+        label='Primeiro Nome'
     )
     last_name = forms.CharField(
         required=True,
+        label='Sobrenome'
     )
     email = forms.EmailField(
         required=True,
+        label='Email'
     )
     class Meta:
         model = User
