@@ -7,6 +7,7 @@ from contact.forms import ContactsForm, RegisterForm, RegisterUpdateForm
 from django.urls import reverse
 from django.contrib import messages, auth
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -70,6 +71,7 @@ def search(request):
         context = context
     )
 
+@login_required(login_url='contact:login')
 def create(request):
     form_action = reverse('contact:create')
 
@@ -82,7 +84,9 @@ def create(request):
         }
 
         if form.is_valid():
-            contact = form.save()
+            contact = form.save(commit=False)
+            contact.owner = request.user
+            contact.save()
             return redirect('contact:update', contact_id=contact.id)
 
         return render(
@@ -102,8 +106,9 @@ def create(request):
         context
     )
 
+@login_required(login_url='contact:login')
 def update(request, contact_id):
-    contact = get_object_or_404(Contacts, pk=contact_id, show=True)
+    contact = get_object_or_404(Contacts, pk=contact_id, show=True, owner=request.user)
     form_action = reverse('contact:update', args=(contact_id,))
 
     if request.method == 'POST':
@@ -135,6 +140,7 @@ def update(request, contact_id):
         context
     )
 
+@login_required(login_url='contact:login')
 def delete(request, contact_id):
     contact = get_object_or_404(Contacts, pk=contact_id, show=True)
     confirmation = request.POST.get('confirmation', 'no')
@@ -147,7 +153,6 @@ def delete(request, contact_id):
         'contact': contact,
         'confirmation' : confirmation, 
     })
-
 
 def register(request):
     form = RegisterForm()
@@ -187,10 +192,12 @@ def login_view(request):
                   }
                   )
 
+@login_required(login_url='contact:login')
 def logout_view(request):
     auth.logout(request)
     return redirect('contact:login')
 
+@login_required(login_url='contact:login')
 def user_update(request):
     form = RegisterUpdateForm(instance=request.user)
 

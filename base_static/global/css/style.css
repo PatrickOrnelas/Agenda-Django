@@ -101,6 +101,11 @@ svg {
   background: var(--clr-light-shadow-10);
 }
 
+.menu-item.logout .menu-link:hover {
+  background: tomato;
+  color: var(--clr-white);
+}
+
 .content {
   max-width: var(--main-page-width);
   margin: calc(var(--spacing) * 2) auto;
