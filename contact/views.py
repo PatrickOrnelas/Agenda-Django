@@ -3,7 +3,7 @@ from django.db.models import Q
 from contact.models import Contacts
 from django.core.paginator import Paginator
 from django import forms
-from contact.forms import ContactsForm, RegisterForm
+from contact.forms import ContactsForm, RegisterForm, RegisterUpdateForm
 from django.urls import reverse
 from django.contrib import messages, auth
 from django.contrib.auth.forms import AuthenticationForm
@@ -190,3 +190,23 @@ def login_view(request):
 def logout_view(request):
     auth.logout(request)
     return redirect('contact:login')
+
+def user_update(request):
+    form = RegisterUpdateForm(instance=request.user)
+
+    if request.method != 'POST':
+        return render(request,
+                    'contact/user_update.html',
+                    {
+                        'form' : form
+                    })
+    form = RegisterUpdateForm(data= request.POST, instance=request.user)
+    if not form.is_valid():
+        return render(request,
+                    'contact/user_update.html',
+                    {
+                        'form' : form
+                    })
+    form.save()
+    messages.success(request=request, message='Perfil atualizado com sucesso!')
+    return redirect('contact:user_update')
